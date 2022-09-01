@@ -7,9 +7,8 @@ router.get("/users/:id", (req, res) => {
   const usersPath = path.join(__dirname, "../data/users.json");
 
   fsPromises.readFile(usersPath, { encoding: "utf-8" }).then((data, err) => {
-
     if (err) {
-      res.status(500).send({message: "Can't find users"});
+      res.status(500).send({ message: "Can't find users" });
     }
 
     if (data && requestParams.id) {
@@ -18,10 +17,9 @@ router.get("/users/:id", (req, res) => {
       if (userFound) {
         res.status(200).send(userFound);
       } else {
-        res.status(404).send({message: "User not found"});
+        res.status(404).send({ message: "User not found" });
       }
     }
-
   });
 });
 
@@ -35,7 +33,7 @@ router.get("/users", (req, res) => {
     if (data) {
       res.send(JSON.parse(data));
     } else {
-      res.status(404).send({message: "No users"});
+      res.status(404).send({ message: "No users" });
     }
   });
 });
