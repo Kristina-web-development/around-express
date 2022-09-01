@@ -1,17 +1,18 @@
-const fs = require("fs");
+const fsPromises = require("fs").promises;
 const path = require("path");
 const router = require("express").Router();
 
 router.get("/cards", (req, res) => {
   const cardsPath = path.join(__dirname, "../data/cards.json");
 
-  fs.readFile(cardsPath, { encoding: "utf-8" }, (err, data) => {
+  fsPromises.readFile(cardsPath, { encoding: "utf-8" }).then((data, err) => {
+
     if (err) {
-      console.log(err);
+      res.status(500).send({ message: "Cards not found" });
     }
 
     if (data) {
-      res.send(data);
+      res.send(JSON.parse(data));
     }
   });
 });

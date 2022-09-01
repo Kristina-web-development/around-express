@@ -1,38 +1,41 @@
-const fs = require("fs");
+const fsPromises = require("fs").promises;
 const path = require("path");
 const router = require("express").Router();
 
 router.get("/users/:id", (req, res) => {
   const requestParams = req.params;
   const usersPath = path.join(__dirname, "../data/users.json");
-  fs.readFile(usersPath, { encoding: "utf-8" }, (err, data) => {
+
+  fsPromises.readFile(usersPath, { encoding: "utf-8" }).then((data, err) => {
+
     if (err) {
-      res.send(err);
+      res.status(500).send({message: "Can't find users"});
     }
 
     if (data && requestParams.id) {
       const users = JSON.parse(data);
       const userFound = users.find((user) => user["_id"] === requestParams.id);
       if (userFound) {
-        res.send(userFound);
+        res.status(200).send(userFound);
       } else {
-        res.send("User not found");
+        res.status(404).send({message: "User not found"});
       }
     }
+
   });
 });
 
 router.get("/users", (req, res) => {
-  fs.readFile("data/users.json", { encoding: "utf-8" }, (err, data) => {
+  const usersPath = path.join(__dirname, "../data/users.json");
+  fsPromises.readFile(usersPath, { encoding: "utf-8" }).then((data, err) => {
     if (err) {
-      console.log(err);
+      res.status(500).send({ message: "Users not found" });
     }
 
     if (data) {
-      console.log(data);
-      res.send(data);
+      res.send(JSON.parse(data));
     } else {
-      res.send("No users");
+      res.status(404).send({message: "No users"});
     }
   });
 });
