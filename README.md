@@ -1,14 +1,36 @@
 
-The project's name:
-- "Around the U.S." 
+# "Around the U.S." 
 
-A description of the project and its functionality: 
-- The projects of the back-end course will focus on creating own server for the "Around the U.S." project. 
-- API, 3 routes(user, users:id, cards)
+## Description
 
-A description of the technologies and techniques used: 
-- Node.js including ExpressJS (for JavaScript with Node.js)
-  
+This project is API with following routes available to use: 
+
+- **GET**       /users                  Get all users
+- **GET**       /users/:id              Get user by ID
+- **POST**      /users                  Create a new user
+- **PATCH**     /me                     Update current user profile info
+- **PATCH**     /me/avatar              Update current user profile avatar
+
+- **GET**       /cards                  Get all cards
+- **POST**      /cards                  Create a new card
+- **PUT**       /cards/:cardId/like     Like card
+- **DELETE**    /cards/:cardId          Delete card
+- **DELETE**    /cards/:cardId/like     Unlike card
+
+## Project stack
+
+- express   4.18.1
+- mongoose  6.5.4
+- nodejs    16
+## How to run
+
+```
+  # Just start a project
+  npm run start
+
+  # Run in a dev mode
+  npm run dev
+```
 
   
 
