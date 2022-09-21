@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -16,13 +17,13 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: true,
+    validate: {
+      validator(v) {
+        return validator.isURL(v);
+      },
+      message: 'Please enter the valid URL',
+    },
   },
 });
-
-userSchema.path('avatar').validate((val) => {
-  urlRegex =
-    /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
-  return urlRegex.test(val);
-}, "Invalid URL.");
 
 module.exports = mongoose.model('user', userSchema);

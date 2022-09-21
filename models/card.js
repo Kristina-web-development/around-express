@@ -8,8 +8,14 @@ const cardSchema = new mongoose.Schema({
     maxlength: 30,
   },
   link: {
-    type: String,
+    type: mongoose.Schema.Types.String,
     required: true,
+    validate: {
+      validator(v) {
+        return /(https?:\/\/[^\s]+)/.test(v);
+      },
+      message: 'Please enter the valid URL',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -25,10 +31,10 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
-cardSchema.path('link').validate((val) => {
-  urlRegex =
-    /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
-  return urlRegex.test(val);
-}, "Invalid URL.");
+// cardSchema.path('link').validate((val) => {
+//   urlRegex =
+//     /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
+//   return urlRegex.test(val);
+// }, "Invalid URL.");
 
 module.exports = mongoose.model('card', cardSchema);
