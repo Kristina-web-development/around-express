@@ -3,7 +3,12 @@ const { NOT_FOUND, errorHandler } = require('../utils/constants');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => {
+      if (cards === null) {
+        res.status(NOT_FOUND).send({ message: 'No cards found' });
+      }
+      res.send({ data: cards });
+    })
     .catch((err) => errorHandler(res, err));
 };
 
@@ -30,10 +35,12 @@ module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
-    .orFail((err) => {
-      res.status(NOT_FOUND).send({ message: 'Card not found' });
+    .orFail(() => {
+      const error = new Error('Card not found');
+      error.statusCode = NOT_FOUND;
+      throw error;
     })
     .then((card) => res.send({ card }))
     .catch((err) => errorHandler(res, err));
@@ -43,10 +50,12 @@ module.exports.unlikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
-    .orFail((err) => {
-      res.status(NOT_FOUND).send({ message: 'Card not found' });
+    .orFail(() => {
+      const error = new Error('Card not found');
+      error.statusCode = NOT_FOUND;
+      throw error;
     })
     .then((card) => res.send({ card }))
     .catch((err) => errorHandler(res, err));
